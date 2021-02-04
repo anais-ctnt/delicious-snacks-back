@@ -4,18 +4,46 @@ const router = express.Router();
 const connection = require('../config/config');
 
 router.get('/', (req, res) => {
-  connection.query(
-    'SELECT * FROM recipe ORDER BY date_added',
-    (err, results) => {
-      if (err) {
-        res.status(500).json({ error: err });
-      } else {
-        results.length > 0
-          ? res.status(200).json(results)
-          : res.status(404).send('Recipes not found');
-      }
+  let sqlRequest = 'SELECT * FROM recipe WHERE 1=1 ';
+  let sqlValues = [];
+
+  if (req.query.yummi) {
+    sqlValues.push(req.query.yummi);
+    sqlRequest += `AND healthy = ? `;
+  }
+
+  if (req.query.healthy) {
+    sqlValues.push(req.query.healthy);
+    sqlRequest += `AND healthy = ? `;
+  }
+
+  if (req.query.snacks) {
+    sqlValues.push(req.query.snacks);
+    sqlRequest += `AND snacks = ? `;
+  }
+
+  if (req.query.drinks) {
+    sqlValues.push(req.query.drinks);
+    sqlRequest += `AND snacks = ? `;
+  }
+
+  if (req.query.searchquery) {
+    for (let i = 1; i <= 3; i++) {
+      sqlValues.push('%' + req.query.searchquery + '%');
     }
-  );
+    sqlRequest += `AND (title LIKE ? OR ingredients LIKE ? OR description LIKE ?) `;
+  }
+  sqlRequest += `ORDER BY date_added`;
+
+  connection.query(sqlRequest, sqlValues, (err, results) => {
+    if (err) {
+      res.status(500).json({ error: err });
+    } else {
+      results.length > 0
+        ? res.status(200).json(results)
+        : res.status(404).send('Recipes not found');
+    }
+  });
 });
 
 router.get('/drinks', (req, res) => {
