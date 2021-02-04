@@ -79,7 +79,7 @@ router.get('/snacks', (req, res) => {
 router.get('/:id', (req, res) => {
   const idRecipe = req.params.id;
   connection.query(
-    'SELECT * FROM recipe WHERE recipe_id = ?',
+    'SELECT * FROM recipe JOIN user ON user.user_id = recipe.user_id WHERE recipe_id = ?',
     [idRecipe],
     (err, results) => {
       if (err) {
