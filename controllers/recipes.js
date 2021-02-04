@@ -7,24 +7,14 @@ router.get('/', (req, res) => {
   let sqlRequest = 'SELECT * FROM recipe WHERE 1=1 ';
   let sqlValues = [];
 
-  if (req.query.yummi) {
-    sqlValues.push(req.query.yummi);
-    sqlRequest += `AND healthy = ? `;
+  if (req.query.type) {
+    sqlValues.push(`${req.query.type}`);
+    sqlRequest += `AND type = ? `;
   }
 
-  if (req.query.healthy) {
-    sqlValues.push(req.query.healthy);
-    sqlRequest += `AND healthy = ? `;
-  }
-
-  if (req.query.snacks) {
-    sqlValues.push(req.query.snacks);
-    sqlRequest += `AND snacks = ? `;
-  }
-
-  if (req.query.drinks) {
-    sqlValues.push(req.query.drinks);
-    sqlRequest += `AND snacks = ? `;
+  if (req.query.category) {
+    sqlValues.push(`${req.query.category}`);
+    sqlRequest += `AND category = ? `;
   }
 
   if (req.query.searchquery) {
@@ -48,7 +38,7 @@ router.get('/', (req, res) => {
 
 router.get('/drinks', (req, res) => {
   connection.query(
-    'SELECT * FROM recipe WHERE snacks = 0 ORDER BY date_added',
+    'SELECT * FROM recipe WHERE category = "drinks" ORDER BY date_added',
     (err, results) => {
       if (err) {
         res.status(500).json({ error: err });
@@ -63,7 +53,7 @@ router.get('/drinks', (req, res) => {
 
 router.get('/snacks', (req, res) => {
   connection.query(
-    'SELECT * FROM recipe WHERE snacks = 1 ORDER BY date_added',
+    'SELECT * FROM recipe WHERE category = "snacks" ORDER BY date_added',
     (err, results) => {
       if (err) {
         res.status(500).json({ error: err });
@@ -99,21 +89,21 @@ router.post('/', (req, res) => {
     ingredients,
     description,
     picture,
-    snacks,
-    healthy,
+    category,
+    type,
     date_added: dateAdded,
     user_id: userId,
   } = req.body;
 
   connection.query(
-    'INSERT INTO recipe (title, ingredients description, picture, snacks, healthy, date_added user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+    'INSERT INTO recipe (title, ingredients, description, picture, category, type, date_added, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
     [
       title,
       ingredients,
       description,
       picture,
-      snacks,
-      healthy,
+      category,
+      type,
       dateAdded,
       userId,
     ],
