@@ -5,13 +5,13 @@ const connection = require('../config/config');
 
 router.get('/', (req, res) => {
   connection.query(
-    'SELECT * FROM user WHERE ORDER BY followers DESC',
+    'SELECT * FROM user ORDER BY followers DESC',
     (err, results) => {
       if (err) {
         res.status(500).json({ error: err });
       } else {
         results.length > 0
-          ? res.status(200).json(results[0])
+          ? res.status(200).json(results)
           : res.status(404).send('Users not found');
       }
     }

@@ -26,8 +26,8 @@ router.get('/drinks', (req, res) => {
         res.status(500).json({ error: err });
       } else {
         results.length > 0
-          ? res.status(200).json(results[0])
-          : res.status(404).send('Recipes not found');
+          ? res.status(200).json(results)
+          : res.status(404).send('Drinks not found');
       }
     }
   );
@@ -41,8 +41,8 @@ router.get('/snacks', (req, res) => {
         res.status(500).json({ error: err });
       } else {
         results.length > 0
-          ? res.status(200).json(results[0])
-          : res.status(404).send('Recipes not found');
+          ? res.status(200).json(results)
+          : res.status(404).send('Snacks not found');
       }
     }
   );
