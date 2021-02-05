@@ -17,9 +17,9 @@ router.get('/', (req, res) => {
     sqlRequest += `AND category = ? `;
   }
 
-  if (req.query.searchquery) {
+  if (req.query.search) {
     for (let i = 1; i <= 3; i++) {
-      sqlValues.push('%' + req.query.searchquery + '%');
+      sqlValues.push('%' + req.query.search + '%');
     }
     sqlRequest += `AND (title LIKE ? OR ingredients LIKE ? OR description LIKE ?) `;
   }
@@ -91,8 +91,8 @@ router.post('/', (req, res) => {
     picture,
     category,
     type,
-    date_added: dateAdded,
-    user_id: userId,
+    dateAdded,
+    userId,
   } = req.body;
 
   connection.query(
